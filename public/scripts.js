@@ -17,35 +17,71 @@ const Mask = {
 }
 
 const PhotosUpload = {
+  preview: document.querySelector('#photos-preview'),
   uploadLimit: 6,
+  files: [],
   handleFileInput(event) {
     const { files: fileList } = event.target
-    const { uploadLimit } = PhotosUpload
-
-    if (fileList.length > uploadLimit) {
-      alert(`Envie no máximo ${uploadLimit} fotos`)
-      event.preventDefault()
-      return
-    }
+    
+    if (PhotosUpload.hasLimit(event)) return
 
     Array.from(fileList).forEach(file => {
+      
+      PhotosUpload.files.push(file)
+
       const reader = new FileReader()
 
       reader.onload = () => { //Quando o arquivo estiver pronto, executa a arrow function
         const image = new Image()
         image.src = String(reader.result)
+        
 
-        const div = document.createElement('div')
-        div.classList.add('photo') //Adiciona a classe 'photo' na div
+        const div = PhotosUpload.getContainer(image)
 
-        div.onclick = () => alert('remover foto')
-
-        div.appendChild(image)
-
-        document.querySelector('#photos-preview').appendChild(div)
+        PhotosUpload.preview.appendChild(div)
       }
 
       reader.readAsDataURL(file) // Quando carregado, executa a função onload
     })
+  },
+  hasLimit(event) {
+    const { uploadLimit } = PhotosUpload
+    const { files: fileList } = event.target
+
+    if (fileList.length > uploadLimit) {
+      alert(`Envie no máximo ${uploadLimit} fotos`)
+      event.preventDefault()
+      return true
+    }
+
+    return false
+  },
+  getContainer(image) {
+    const div = document.createElement('div')
+        div.classList.add('photo') //Adiciona a classe 'photo' na div
+
+        div.onclick = PhotosUpload.removePhoto
+
+        div.appendChild(image)
+
+        div.appendChild(PhotosUpload.getRemoveButton())
+
+        return div
+  },
+  getRemoveButton() {
+    const button = document.createElement('i')
+    button.classList.add('material-icons')
+
+    button.innerHTML = "close"
+
+    return button
+
+  },
+  removePhoto(event) {
+    const photoDiv = event.target.parentNode
+    const photosArray = Array.from(PhotosUpload.preview.children)
+    const index = photosArray.indexOf(photoDiv)
+
+    photoDiv.remove()
   }
 }
