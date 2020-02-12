@@ -1,20 +1,4 @@
 module.exports = {
-  age(timestamp) {
-    const today = new Date()
-    const birthDate = new Date(timestamp)
-
-    let age = today.getFullYear() - birthDate.getFullYear()
-    const month = today.getMonth() - birthDate.getMonth()
-
-    // getDate = day 1 - 31 , getDay = day 0 - 6
-
-    if ( month < 0 || month == 0  && today.getDate() <= birthDate()) {
-      age = age - 1
-    }
-
-    return age
-  },
-
   date(timestamp) {
     const date = new Date(timestamp)
     
@@ -40,5 +24,43 @@ module.exports = {
       style: 'currency', //1.000.00
       currency: 'BRL'
     }).format(price/100)
+  },
+  formatCpfCnpj(value) {
+    value = value.replace(/\D/g,"")
+
+    if (value.length > 14)
+      value = value.slice(0,-1) //Tira a ultima posição
+
+    // Checar pra ver se  CNPJ - 11.222.333/0001-11
+    if (value.length > 11) {
+        value = value.replace(/(\d{2})(\d)/, "$1.$2") // 11.222333444455
+
+        value = value.replace(/(\d{3})(\d)/, "$1.$2") //11.222.333444455
+
+        value = value.replace(/(\d{3})(\d)/, "$1/$2") //11.222.333/444455
+
+        value = value.replace(/(\d{4})(\d)/, "$1-$2") //11.222.333/4444-55
+
+    } else { 
+      // cpf 111.222.333-44
+      value = value.replace(/(\d{3})(\d)/, "$1.$2") 
+
+      value = value.replace(/(\d{3})(\d)/, "$1.$2") 
+
+      value = value.replace(/(\d{3})(\d)/, "$1-$2") 
+
+    } 
+
+    return value
+  },
+  formatCep(value) {
+    value = value.replace(/\D/g,"")
+
+    if (value.length > 8)
+      value = value.slice(0,-1) //Tira a ultima posição
+
+    value = value.replace(/(\d{5})(\d)/, "$1-$2") 
+
+    return value
   }
 }
