@@ -7,6 +7,11 @@ const session = require('./config/session')
 const server = express();
 
 server.use(session)
+server.use((req, res, next) => {
+    res.locals.session =  req.session // Agora o session está disponivel para todo o layout
+    next()
+  })
+
 server.use(express.urlencoded({ extended: true })) //Responsável por fazer funcionar o req.body
 server.use(express.static("public"))
 server.use(methodOverride('_method'))
