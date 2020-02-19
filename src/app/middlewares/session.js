@@ -10,7 +10,7 @@ function isLoggedRedirectToUsers(req, res, next) {
     return res.redirect('/users')
   }
 
-  next
+  next()
 }
 
 module.exports = {

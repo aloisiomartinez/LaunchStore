@@ -8,7 +8,7 @@ const server = express();
 
 server.use(session)
 server.use((req, res, next) => {
-    res.locals.session =  req.session // Agora o session está disponivel para todo o layout
+    res.locals.session =  req.session // Agora o session está disponivel para todo o layout (template engine)
     next()
   })
 
