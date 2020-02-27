@@ -208,9 +208,7 @@ const Validate = {
 
       if (results.error) {
         Validate.displayError(input, results.error)
-      }
-
-      
+      }  
   },
   displayError(input, error) {
     const div = document.createElement('div')
@@ -264,6 +262,23 @@ const Validate = {
     return {
       error,
       value
+    }
+  },
+  allFields(e) {
+    const items = document.querySelectorAll(' .item input, .item select, .item textarea')
+
+    for (item of items) {
+      if(item.value == "") {
+        const message = document.createElement('div')
+        message.classList.add('messages')
+        message.classList.add('error')
+        message.style.position = 'fixed'
+        message.innerHTML = 'Todos os campos são obrigatórios.'
+        document.querySelector('body').append(message)
+
+        e.preventDefault() // Bloqueia a página, não deixando ir para 'frente'.
+
+      }
     }
   }
 }
